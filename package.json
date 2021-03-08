@@ -10,7 +10,7 @@
 		"client": "npm start --prefix frontend",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
 		"data:import": "node backend/seeder",
-		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefixe frontend"
+		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
 	},
 	"author": "",
 	"license": "ISC",
@@ -28,5 +28,8 @@
 		"mongoose": "^5.11.15",
 		"morgan": "^1.10.0",
 		"multer": "^1.4.2"
+	},
+	"engines": {
+		"node": "14.15.5"
 	}
 }
