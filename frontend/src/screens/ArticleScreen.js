@@ -18,6 +18,8 @@ import {
 } from '../actions/articleActions';
 import { ARTICLE_CREATE_REVIEW_RESET } from '../constants/articleConstant';
 
+import draftToHtml from 'draftjs-to-html';
+
 const ArticleScreen = ({ match }) => {
 	const [comment, setComment] = useState('');
 
@@ -68,7 +70,16 @@ const ArticleScreen = ({ match }) => {
 						<h4>Date: {article.createdAt}</h4>
 					</Container>
 					<Image src={article.image} alt={article.title} fluid />
-					<p className="mt-3 mb-5">{article.content}</p>
+					{article.content && (
+						<div
+							dangerouslySetInnerHTML={{
+								__html: draftToHtml(
+									JSON.parse(JSON.stringify(article.content))
+								),
+							}}
+						/>
+					)}
+
 					<hr />
 					<Row>
 						<Col md={6}>

@@ -9,14 +9,20 @@ import FormContainer from '../components/FormContainer';
 import { listArticleDetails, updateArticle } from '../actions/articleActions';
 import { ARTICLE_UPDATE_RESET } from '../constants/articleConstant';
 
+import { EditorState, convertToRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import '../components/RichEditor.css';
+
 const ArticleEditScreen = ({ match, history }) => {
 	const articleId = match.params.id;
 
 	const [title, setTitle] = useState('');
 	const [image, setImage] = useState('');
-	const [content, setContent] = useState('');
 	const [category, setCategory] = useState('');
 	const [uploading, setUploading] = useState(false);
+
+	const [description, setDescription] = useState(EditorState.createEmpty());
 
 	const dispatch = useDispatch();
 
@@ -40,7 +46,7 @@ const ArticleEditScreen = ({ match, history }) => {
 			} else {
 				setTitle(article.title);
 				setImage(article.image);
-				setContent(article.content);
+				//setDescription(article.content);
 				setCategory(article.category);
 			}
 		}
@@ -71,12 +77,15 @@ const ArticleEditScreen = ({ match, history }) => {
 
 	const submitHandler = (e) => {
 		e.preventDefault();
+		let descriptionConvertedData = convertToRaw(
+			description.getCurrentContent()
+		);
 		dispatch(
 			updateArticle({
 				_id: articleId,
 				title,
 				image,
-				content,
+				content: descriptionConvertedData,
 				category,
 			})
 		);
@@ -126,12 +135,14 @@ const ArticleEditScreen = ({ match, history }) => {
 
 						<Form.Group controlId="content">
 							<Form.Label>Content</Form.Label>
-							<Form.Control
-								type="text"
-								placeholder="Enter content"
-								value={content}
-								onChange={(e) => setContent(e.target.value)}
-							></Form.Control>
+							<Editor
+								editorState={description}
+								wrapperClassName="wrapper-class"
+								editorClassName="editor-class"
+								onEditorStateChange={(editorState) =>
+									setDescription(editorState)
+								}
+							/>
 						</Form.Group>
 
 						<Form.Group controlId="category">
